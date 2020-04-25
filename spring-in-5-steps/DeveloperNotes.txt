@@ -1,0 +1,346 @@
+________________Spring Level 1 - First 10 Steps in Spring_______________
+
+What is Spring?
+***[Spring is a Dependency Injection Framework]
+Software needs (depends) on other software
+
+What is Dependency Injection?
+
+What is a Dependency?
+E.g.: Business Layer is a DEPENCY of the Web Layer
+E.g.: Data Layer is a DEPENCY of the Business Layer
+E.g.: Member Methods are DEPENCIES of a Class
+
+Tight Coupling is BAD
+Loose Coupling is GOOD
+
+Creating Objects and Populating Dependencies - Spring Framework
+
+It my job as a developer to tell Spring Framework:
+- What are the Objects you need to manage, and
+- What are the Dependencies of each Class
+
+@Component   // Spring you need to manage instances of ComplexBusinessService
+public class ComplexBusinessService {
+	SortAlgorithm sort
+
+@Component   // Spring you need to manage instances of BubbleSortAlgorithm
+public class ComplexBusinessService implement SortAlgorithm {
+
+But how do you tell (inform Spring) that SortAlogrithm is a Dependecy of ComplexBusinessService?
+@Component   // Spring you need to manage instances of ComplexBusinessService
+public class ComplexBusinessService {
+	@Autowired
+	SortAlgorithm sort
+
+@Autowired - Spring starts looking for this Dependecy
+
+Beans - Object instances that Spring manages are called Beans.
+Autowiring - The process were Spring identifies the dependencies, finds matches for the dependencies and populates them
+Inversion of Control - Taking the control of the tightly couple dependency of a class and giving its control to Spring 
+IOC Container - General terminology for anything that is implementing IOC
+Application Context - The most important IOC Container is the Spring Framework
+
+
+************************* Creating a project through Spring Initializr ****************************
+Spring Initializr - https://start.spring.io/
+Course a Spring Boot version 2.0+ ~= Spring 5  //GPC: I think
+// avoid SNAPSHOT versions
+
+You know how to fill out a Spring Initializr page, which drops a zip file to where you want:
+
+// 8.Step3: Making BinarySearch Losely Coupled
+SortAlgorithm is a Dependecy of the BinarySearch
+BinarySearch depends of SortAlgorithm
+
+* Most important concepts behind Spring in Dependency Injection and Loose Coupling
+// 9.Step4: Using Spring Framework to Manage Dependencies
+Your need to tell Spring about to wire beans together:
+1. What are the beans that Spring has to manage? BinarySearchImpl, BubbleSortAlgo
+2. What are the dependencies of a bean? BinarySearchImpl->SortAlgorithm
+3. Where to search for beans? (Component Scan) => No need, all of our code is in the same package
+ApplicaitonContext - manages all the beans
+
+// 10.Step5: What is happening in the background?
+src/main/resources/application.properties: //add following line
+logging.level.org.springframework = debug;
+* studied the logging for bean identification and autowiring of dependencies
+
+// 11.Step6: Dynamic auto wiring and Troubleshooting - @Primary
+Both classes implement SortAlgorithm which cause a problem, making BubbleSortAlgorithm the @Primary solves this
+@Component
+@Primary
+public class BubbleSortAlgorithm implements SortAlgorithm {
+@Component
+public class QuickSortAlgorithm implements SortAlgorithm{
+
+// 12.Fastest Approach to Solve All Your Exceptions
+This 50 page troubleshooting guide and faq is our way of thanking you for choosing to learn from in28Minutes.
+It provides solutions for 200 FAQ and Frequently faced Problems. 
+Here's the Quick Start with Top 10 FAQ 
+https://github.com/in28minutes/in28minutes-initiatives/blob/master/The-in28Minutes-TroubleshootingGuide-And-FAQ/quick-start.md
+
+// 13.Step7: Constructor and Setter Injection
+In our code neither a Constructor or Setter is needed for Injection;
+@Autowired
+private SortAlgorithm sortAlgorithm;
+// This alone will automatically search for a SortAlgorithm through the tree of dependencies
+
+// 14.Step8: Spring Modules [illustration on overview of Spring Modules]
+
+// 15.Step9: Spring Projects [illustration an overview of different types of Spring Projects]: SpringBoot Most Popular
+
+// 16.Step10: Why is Spring Popular?
+1. Enables writing testable code
+2. No plumbing Code
+3. Flexible Architecture
+4. Staying Current (with the trends)
+
+
+________________Spring Level 2 - Spring in depth_________________
+// 18.Step11: Dependency Injection - a few more examples
+Happy Horseshit - blah, blah, blah, already covered
+
+// 19.Step12: Autowiring in Depth - by Name and @Primary
+@Primary has presedence over Named
+Happy Horseshit - blah, blah, blah, already covered
+
+// 20.Step13 - Autowiring in Depth - @Qualifier annotation
+So for competing dependencies we have 3 options: @Qualifier("name"), @Primary, Named
+
+// 21.Step14 - Scope of a Bean - Prototype and Singleton
+- Default: singleton - One instance per Spring Context
+- prototype - New bean whenever requested
+- request - One bean per HTTP request
+- session - One bean per HTTP session
+
+// 22. Step15 - Complex scenarios with Scope of a Spring Bean - Mix of Prototype and Singleton
+Use proxy to get a new instance of the Depency
+
+// 23. Step 15B - Difference Between Spring Singleton and GOF(Gang Of Four) Singleton
+Happy Horseshit - blah, blah, blah
+
+// 24. Step 16 - Using Component Scan to scan for beans
+@SpringBootApplication  //Automatically does a Component Scan the main class package and subpackages
+
+But, if your components are elsewhere, then:
+package com.jerryc.spring.basics.springin5steps; // Default package to scan
+@SpringBootApplication
+@ComponentScan("com.jerryc.spring.basics.componentscan") // tell the application to package scan  here
+public class SpringIn5StepsComponentscanApplication {
+
+Think of @ComponentScan like a search for compenents
+************* BAD: Instructor is cluster flocking multiple sub-projects with one project ***********
+
+
+// 25. Step 17 - Lifecycle of a Bean - @PostConstruct and @PreDestroy
+The life cycle of a bean is controlled by: **"the Spring IOC Container"**
+After the bean is created and initialized with its dependencies, then the @PostConstruct Method is called.
+@PostConstruct
+public void postConstructInit() {
+	logger.info("postConstructInit- do further initialization of the BinarySearchImpl bean");
+}
+@PreDestroy
+public void preDestroyStuff() {
+	logger.info("preDestroyStuff- do further cleanup before the BinarySearchImpl bean is removed from IOC Container");
+}
+//NOTE: did not see preDestroyStuff corresponding log entry???
+
+
+// 26. Step 18 - Container and Dependency Injection (CDI) - @Named, @Inject
+CDI is a standard names the annoations and functionality of the **"the Spring IOC Container"**
+CDI is an interface that defines how to do Depency Injection
+Alike a Standard for JPA(Defines the interface) and Hibernate(Understands JPA IPA and implements it).
+Why in the flying Flock are there psuode equilant tags from the CDI.
+Why didn't Spring just do what the Standard stated. WTF:GPC
+CDI Standard:
+@Inject, Spring uses @Autowired
+@Named, Spring uses @Component, @Qualifier
+@Singleton, Spring defines a scope Singleton
+
+What is this Cluster Flock? (GPC: I think I'm in a nightmare)
+Instructor: CDI showed a new way of doing the above (GPC:WTF)
+So you can use the Spring annotations OR the CDI anotations, Which One?
+CDI: 51% vote because its the standard, Spring Implementation: 49% because its the implemation
+What kind of sick dev world has these different ~= equal annotations (GPC:WTF)
+This course will continue with Spring Annotations. (I guess this was a heads-up)
+I have NEVER seen a standard that says @ABC is the annotation; but, the implentation was @XYZ (GPC:WTF)
+
+// 27. Step 19 - Removing Spring Boot in Basic Spring Core Application
+/*As we start removing Spring Boot and bringing in Spring core in the next step, you would see
+A few SLF4J errors.
+Logging does not work
+Do not worry about them. We will fix them in Step 20.*/
+- In pom.xml commented out:
+<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+</dependency>
+- Added
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+- Updated SpringIn5StepsBasicApplication.java from Spring Boot to Spring Core (See Code)
+Exercise: Migrate the other inbedded applications (GPC:WTF, and loose want I learned, WTF)
+
+
+// 28. Step 20 - Fixing minor stuff - Add Logback and Close Application Context
+Yep,(I only updated SpringIn5StepsBasicApplication.java), (GPC:FYI:JunkInTheTrunk)
+
+
+// 29. Step 21 - Defining Spring Application Context using XML - Part 1
+****Before Spring 2.5 Beans and Dependencies HAD do be defined in an xml file.
+      In retrospect, very bad as compared to Annotations****
+Created resources/applicaitonContext.xml <--------<<<
+We need to define a NAMESPACE 
+Google: spring documation applcation context example
+https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/beans.html
+3.2.1 Configuration metadata
+The following example shows the basic structure of XML-based configuration metadata:
+Copied content to resources/applicaitonContext.xml: ***We will define the beans and there dependencies***
+[Code:XmlJdbcConnection -> copy qualified name -> applicaitonContext.xml: class="here"]
+ BEFORE: <bean id="..." class="...">
+ AFTER:
+ <bean id="xmlJdbcConnection" class="com.jerryc.spring.basics.springin5steps.xml.XmlJdbcConnection">
+
+
+// 30. Step 22 - Defining Spring Application Context using XML - Part 2
+resources/applicaitonContext.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+  <bean id="xmlJdbcConnection"
+  	class="com.jerryc.spring.basics.springin5steps.xml.XmlJdbcConnection">
+  </bean>
+
+  <!-- xmlPersonDAO DEPENDS on xmlJdbcConnection == @Autowired -->
+  <bean id="xmlPersonDAO"
+  	class="com.jerryc.spring.basics.springin5steps.xml.XmlPersonDAO">
+  	<property name="xmlJdbcConnection" ref="xmlJdbcConnection"/>
+  </bean>
+  
+</beans>
+
+Also,
+XmlJdbcConnection.java and XmlPersonDAO.java stripped of ALL Annotations
+SpringIn5StepsXMLContextApplication.java
+:
+public static void main(String[] args) {
+	
+		try (ClassPathXmlApplicationContext applicationContext =
+			new ClassPathXmlApplicationContext("applicationContext.xml")) {
+:
+
+
+// 31. Step 23 - Mixing XML Context with Component Scan for Beans defined with Annotations
+- ApplicationContext.xml(added) <context:component-scan base-package="com.jerryc.spring.basics"/>
+- SpringIn5StepsXMLContextApplication.java
+LOGGER.info("Beans Loaded -> {}", (Object) applicationContext.getBeanDefinitionNames());
+Log:
+Beans Loaded -> [componentDAO, scopedTarget.componentJdbcConnection, componentJdbcConnection, 
+springIn5StepsBasicApplication, binarySearchImpl, bubbleSortAlgorithm, quickSortAlgorithm,
+someCdiBusiness, someCdiDao, scopedTarget.jdbcConnection, jdbcConnection, personDAO,
+org.springframework.context.annotation.internalConfigurationAnnotationProcessor, 
+org.springframework.context.annotation.internalAutowiredAnnotationProcessor, 
+org.springframework.context.annotation.internalCommonAnnotationProcessor, 
+org.springframework.context.event.internalEventListenerProcessor, 
+org.springframework.context.event.internalEventListenerFactory, xmlJdbcConnection, xmlPersonDAO]
+
+// 32. Step 24 - IOC Container vs Application Context vs Bean Factory
+IOC - shifting tightly-coupled to loosely-coupled components 
+IOC Container - Concept responsible for Identifying, Injecting and Managing the IOC Components, Dependencies, etc.
+In Spring there are 2 implementation of the IOC Container.
+1. Applicaiton Context - We have been only been using Applicaiton Context
+   (Spring recommended 99% of the time, except when memory is a premium)
+   Applicaiton Context - Bean Factory++ for full full EE Applications
+2. Bean Factory - basic wiring of spring-core Components. It is a subset of Application Context
+
+
+// 33. Step 25 - @Component vs @Service vs @Repository vs @Controller
+What is the difference between them and when to use what
+@Component - If you are not sure which one to use, then go with @Component until deemed otherwise
+@Controller - Used in Spring MVC, used to define a Controller in the Web(UI) Layer
+- Makes sure the Model is populated and the correct View is rendered
+@Service - Used at the Business Layer, 
+@Repository - Used at the Data Layer,
+E.G.s:
+com.jerryc.spring.basics.springin5steps.scope.PersonDAO.java
+@Repository
+public class PersonDAO {	
+	@Autowired
+	JdbcConnection jdbcConneciton;
+-----
+com.jerryc.spring.basics.springin5steps.basic.BinarySearchImpl.java
+@Service
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class BinarySearchImpl {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());	
+	@Autowired
+	@Qualifier("quick")
+	private SortAlgorithm sortAlgorithm;
+-----
+com.jerryc.spring.basics.springin5steps.basic.BubbleSortAlgorithm.java & QuickSortAlgorithm.java
+@Service
+@Qualifier("bubble")
+public class BubbleSortAlgorithm implements SortAlgorithm {
+-----
+***** If there is NO change in functionality, then why use a specific Annotation? *****
+AOP - You can identify the annotation and add functionality (talk more about this in AOP section)
+Allows you to classify you Components into different Categories
+Spring has a different Exception functionality for different Annotations
+You want to log everything in your Business Layer, then you can track @Service component logic
+
+
+// 34 Step 26 - Read values from external properties file
+resource/app.properties:
+external.service.url=http://someserver.dev.com/service
+
+com.jerryc.spring.basics.springin5steps.properties.SomeExternalService.java
+@Component
+public class SomeExternalService {
+	//external.service.url, from app.properties
+	@Value("${external.service.url}")
+	private String url;
+	
+	public String returnServiceURL() {
+		return url;
+	}
+}
+
+com.jerryc.spring.basics.springin5steps.SpringIn5StepsPropertiesApplication.java
+@Configuration
+@ComponentScan
+@PropertySource("classpath:app.properties")
+public class SpringIn5StepsPropertiesApplication {
+	
+	public static void main(String[] args) {
+		
+		try (AnnotationConfigApplicationContext applicationContext =
+			new AnnotationConfigApplicationContext(SpringIn5StepsPropertiesApplication.class)) {
+		
+			SomeExternalService someExternalService = applicationContext.getBean(SomeExternalService.class);
+			System.out.println(someExternalService.returnServiceURL());
+
+		}
+	}
+}
+
