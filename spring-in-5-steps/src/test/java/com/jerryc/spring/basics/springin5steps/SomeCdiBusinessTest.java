@@ -52,4 +52,10 @@ public class SomeCdiBusinessTest {
 		assertEquals(19, businessMock.findTheGreatestFromAllData());
 	}
 	
+	@Test  // Mock Test
+	public void testMockScenarioZero() {
+		when(daoMock.getData()).thenReturn(new int[] { 0 });
+		assertEquals(0, businessMock.findTheGreatestFromAllData());
+	}
+	
 }
