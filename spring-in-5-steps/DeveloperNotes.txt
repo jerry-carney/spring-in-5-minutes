@@ -166,7 +166,7 @@ What kind of sick dev world has these different ~= equal annotations (GPC:WTF)
 This course will continue with Spring Annotations. (I guess this was a heads-up)
 I have NEVER seen a standard that says @ABC is the annotation; but, the implentation was @XYZ (GPC:WTF)
 
-// 27. Step 19 - Removing Spring Boot in Basic Spring Core Application
+// 28. Step 19 - Removing Spring Boot in Basic Spring Core Application
 /*As we start removing Spring Boot and bringing in Spring core in the next step, you would see
 A few SLF4J errors.
 Logging does not work
@@ -200,11 +200,11 @@ Do not worry about them. We will fix them in Step 20.*/
 Exercise: Migrate the other inbedded applications (GPC:WTF, and loose want I learned, WTF)
 
 
-// 28. Step 20 - Fixing minor stuff - Add Logback and Close Application Context
+// 29. Step 20 - Fixing minor stuff - Add Logback and Close Application Context
 Yep,(I only updated SpringIn5StepsBasicApplication.java), (GPC:FYI:JunkInTheTrunk)
 
 
-// 29. Step 21 - Defining Spring Application Context using XML - Part 1
+// 30. Step 21 - Defining Spring Application Context using XML - Part 1
 ****Before Spring 2.5 Beans and Dependencies HAD do be defined in an xml file.
       In retrospect, very bad as compared to Annotations****
 Created resources/applicaitonContext.xml <--------<<<
@@ -220,7 +220,7 @@ Copied content to resources/applicaitonContext.xml: ***We will define the beans 
  <bean id="xmlJdbcConnection" class="com.jerryc.spring.basics.springin5steps.xml.XmlJdbcConnection">
 
 
-// 30. Step 22 - Defining Spring Application Context using XML - Part 2
+// 31. Step 22 - Defining Spring Application Context using XML - Part 2
 resources/applicaitonContext.xml:
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -251,7 +251,7 @@ public static void main(String[] args) {
 :
 
 
-// 31. Step 23 - Mixing XML Context with Component Scan for Beans defined with Annotations
+// 32. Step 23 - Mixing XML Context with Component Scan for Beans defined with Annotations
 - ApplicationContext.xml(added) <context:component-scan base-package="com.jerryc.spring.basics"/>
 - SpringIn5StepsXMLContextApplication.java
 LOGGER.info("Beans Loaded -> {}", (Object) applicationContext.getBeanDefinitionNames());
@@ -265,7 +265,8 @@ org.springframework.context.annotation.internalCommonAnnotationProcessor,
 org.springframework.context.event.internalEventListenerProcessor, 
 org.springframework.context.event.internalEventListenerFactory, xmlJdbcConnection, xmlPersonDAO]
 
-// 32. Step 24 - IOC Container vs Application Context vs Bean Factory
+
+// 33. Step 24 - IOC Container vs Application Context vs Bean Factory
 IOC - shifting tightly-coupled to loosely-coupled components 
 IOC Container - Concept responsible for Identifying, Injecting and Managing the IOC Components, Dependencies, etc.
 In Spring there are 2 implementation of the IOC Container.
@@ -275,7 +276,7 @@ In Spring there are 2 implementation of the IOC Container.
 2. Bean Factory - basic wiring of spring-core Components. It is a subset of Application Context
 
 
-// 33. Step 25 - @Component vs @Service vs @Repository vs @Controller
+// 34. Step 25 - @Component vs @Service vs @Repository vs @Controller
 What is the difference between them and when to use what
 @Component - If you are not sure which one to use, then go with @Component until deemed otherwise
 @Controller - Used in Spring MVC, used to define a Controller in the Web(UI) Layer
@@ -310,7 +311,7 @@ Spring has a different Exception functionality for different Annotations
 You want to log everything in your Business Layer, then you can track @Service component logic
 
 
-// 34 Step 26 - Read values from external properties file
+// 35. Step 26 - Read values from external properties file
 resource/app.properties:
 external.service.url=http://someserver.dev.com/service
 
@@ -344,3 +345,89 @@ public class SpringIn5StepsPropertiesApplication {
 	}
 }
 
+<<<<<<<<<< SIDE NOTE: Getting unknown error from 1st line of pom.xml, FIX: >>>>>>>>>>
+	<properties>
+		<java.version>1.8</java.version>
+		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>   <---***** Added this line
+	</properties>
+
+
+
+_____________________Spring Level 3 - Unit Testing with Spring Framework____________________
+-------------Spring Unit Testing with Java Context
+// 36. JUnit in 5 Steps 
+
+// 37. Step 1 : What is JUnit and Unit Testing?
+Unit Testing - Testing a specific method or class
+JUnit - Frameword for doing unit testing
+Once you write the JUnit test, then it is automated (you can run it again and again) -- Continuous Integration
+
+// 38. Step 2 : First JUnit Project and Green Bar
+Create /test fold separate from src/ folder
+@Test  - Annotation for a JUnit Test
+Absence is failure is Success
+// 39. Step 3 : First Code and First Unit Test
+// 40. Step 4 : Other assert methods
+// 41. Step 5 : Important annotations
+**** The Above Spring JUnit Testing with Java Context was LAME compard to other JUnit tutorials that I have taken *****
+
+-------------Spring Unit Testing with Mockito
+Seciton: Using Mockito Annotations - @Mock, @InjectMocks, @RunWith
+/mockito-unit-testing/src/test/java/com/jerryc/spring/mockito/mockitounittesting/SomeBussinessMockAnnotationTest.java
+***** FAILED when I tried to run tests *****
+FIX WITH - TestingWTF_FIX
+SUSPECTED PROBLEM: <------------------************************* == TestingWTF
+- Instructor using JUnit 4 and Mockito
+- I'm using JUnit Jupiter/JUniit 5 and Mockito
+DETERMINED FIX:  <-----------------------************************* == TestingWTF_FIX
+- I Added JUnit 5 Library to project
+- Added dependency:
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>5.2.5.RELEASE</version>
+		</dependency>
+--> Which added spring-test-5.2.5.RELEASE.jar 
+> org.springframework.test.context.junit.jupiter
+>> SpringExtension.class
+I determined and used:
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes= {SpringIn5StepsBasicApplication.class})
+public class BinarySearchTest {		
+Instead of:
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes= {SpringIn5StepsBasicApplication.class})
+public class BinarySearchTest {
+DETERMINED FIX:  <-----------------------************************* == TestingWTF_FIX
+
+-------------Spring Unit Testing in my project spring-in-5-steps (https://github.com/jerry-carney/spring-in-5-minutes)
+TestingWTF_FIX
+- Instructor removed current spring test dependency and added a few more, result: Errors all through the project
+
+- I commented out the added dependencies and remained with the current spring test dependency == NO CHANGE
+Step 27 - Spring Unit Testing with a Java Context
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes= {SpringIn5StepsBasicApplication.class})
+public class BinarySearchTest {	
+- TestingWTF_FIX - I used this instead of what the instructor was using
+
+
+Step 28 - Spring Unit Testing with an XML Context
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations="/applicationContext.xml")
+public class BinarySearchXmlConfigurationTest {
+
+Step 29 - Spring Unit Testing with Mockito
+	@Mock
+	SomeCdiDao daoMock;
+	
+	@InjectMocks
+	SomeCdiBusiness businessMock;
+	
+	@Test  // Mock Test
+	public void testMockScenario() {
+		when(daoMock.getData()).thenReturn(new int[] {24, 15, 3});
+		assertEquals(24, businessMock.findTheGreatestFromAllData());
+	}
+
+____________________________________XXX_________________________________________
